@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_USERS 10
+
+struct User {
+    char username[20];
+    char password[20];
+    int isActive;
+};
+
+void registerUser(struct User users[], int* numUsers);
+void loginUser(struct User users[], int numUsers);
+
+int main() {
+    struct User users[MAX_USERS];
+    int numUsers = 0;
+    int choice;
+
+    do {
+        printf("1. Register\n2. Login\n3. Exit\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                registerUser(users, &numUsers);
+                break;
+            case 2:
+                loginUser(users, numUsers);
+                break;
+            case 3:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice. Please try again.\n");
+                break;
+        }
+
+        printf("\n");
+    } while (choice != 3);
+
+    return 0;
+}
+
+void registerUser(struct User users[], int* numUsers) {
+    if (*numUsers >= MAX_USERS) {
+        printf("Maximum number of users reached.\n");
+        return;
+    }
+
+    printf("Enter username: ");
+    scanf("%s", users[*numUsers].username);
+
+    printf("Enter password: ");
+    scanf("%s", users[*numUsers].password);
+
+    users[*numUsers].isActive = 1; // Set the flag to true/1 for an active user
+
+    (*numUsers)++;
+
+    printf("Registration successful.\n");
+}
+
+void loginUser(struct User users[], int numUsers) {
+    char username[20];
+    char password[20];
+    int found = 0;
+
+    printf("Enter username: ");
+    scanf("%s", username);
+
+    printf("Enter password: ");
+    scanf("%s", password);
+
+    for (int i = 0; i < numUsers; i++) {
+        if (strcmp(username, users[i].username) == 0 && strcmp(password, users[i].password) == 0) {
+            found = 1;
+
+            if (users[i].isActive) {
+                printf("Login successful.\n");
+            } else {
+                printf("Login failed. User is not active.\n");
+            }
+
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Login failed. Invalid username or password.\n");
+    }
+}
